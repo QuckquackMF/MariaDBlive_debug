@@ -1,7 +1,7 @@
-# Base image
+# Dockerfile
 FROM ubuntu:22.04
 
-# Install MariaDB, Python3, pip, sudo
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     mariadb-server \
     python3 \
@@ -15,22 +15,20 @@ RUN groupadd --gid 1000 vscode \
     && echo "vscode ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vscode \
     && chmod 0440 /etc/sudoers.d/vscode
 
-# Setup MariaDB folder
+# Create MySQL runtime dir
 RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
 
-# Set working directory
+# Create workspace directory
+RUN mkdir -p /workspace && chown -R vscode:vscode /workspace
+
+# Switch to vscode user
+USER vscode
 WORKDIR /workspace
 
-# Copy devcontainer files
-COPY .devcontainer/requirements.txt /workspace/requirements.txt
+# Copy scripts
 COPY .devcontainer/create_db.py /workspace/.devcontainer/create_db.py
 COPY .devcontainer/run_live_debug.py /workspace/.devcontainer/run_live_debug.py
+COPY .devcontainer/requirements.txt /workspace/requirements.txt
 
 # Install Python dependencies
-RUN pip3 install --no-cache-dir -r requirements.txt
-
-# Set vscode user as default
-USER vscode
-
-# Command to start MariaDB and watch Python files
-CMD sudo service mariadb start && python3 .devcontainer/run_live_debug.py
+RUN pip3 install --user -r /workspace/requirements.txt
