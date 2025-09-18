@@ -1,8 +1,9 @@
 {
     "name": "MariaDB Live Debug",
-    "image": "ubuntu:22.04",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
     "remoteUser": "vscode",
-    "features": {},
     "postStartCommand": "sudo chown -R vscode:vscode /workspace && sudo service mariadb start && python3 /workspace/.devcontainer/create_db.py",
     "forwardPorts": [3306],
     "settings": {
@@ -11,8 +12,5 @@
     },
     "extensions": [
         "ms-python.python"
-    ],
-    "mounts": [
-        "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
     ]
 }
