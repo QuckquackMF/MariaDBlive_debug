@@ -13,7 +13,13 @@ try:
     )
     cursor = conn.cursor()
 
-    cursor.execute("CREATE TABLE IF NOT EXISTS test_table (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50));")
+    # Example table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS test_table (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            name VARCHAR(50)
+        );
+    """)
     conn.commit()
 
     print("Database 'mydatabase' is ready and table 'test_table' created.")
