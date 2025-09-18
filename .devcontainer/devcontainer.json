@@ -1,0 +1,13 @@
+{
+  "name": "MariaDB DevContainer",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "vscode",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [3306],
+  "postStartCommand": "sudo chown -R vscode:vscode /workspace && sudo service mariadb start && sudo mariadb -e \"CREATE DATABASE IF NOT EXISTS mydatabase; CREATE USER IF NOT EXISTS 'vscode'@'%' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON mydatabase.* TO 'vscode'@'%'; FLUSH PRIVILEGES;\" && python3 .devcontainer/create_db.py",
+  "extensions": [
+    "ms-python.python"
+  ]
+}
