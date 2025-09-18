@@ -1,1 +1,3 @@
+watchdog
+debugpy
 mysql-connector-python
