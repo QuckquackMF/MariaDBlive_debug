@@ -1,16 +1,35 @@
 {
     "name": "MariaDB Live Debug",
     "build": {
-        "dockerfile": "Dockerfile"
+        "dockerfile": "Dockerfile",
+        "context": ".."
     },
     "remoteUser": "vscode",
-    "postStartCommand": "sudo chown -R vscode:vscode /workspace && sudo service mariadb start && python3 /workspace/.devcontainer/create_db.py",
-    "forwardPorts": [3306],
-    "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash",
-        "python.pythonPath": "/usr/bin/python3"
+    "postStartCommand": "sudo chown -R vscode:vscode /workspace && sudo service mariadb start && python3 /workspace/create_db.py",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python"
+            ],
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash",
+                "python.pythonPath": "/usr/bin/python3"
+            }
+        }
     },
-    "extensions": [
-        "ms-python.python"
+    "mounts": [
+        "source=/root/.codespaces/shared,target=/workspaces/.codespaces/shared,type=bind",
+        "source=/var/lib/docker/codespacemount/.persistedshare,target=/workspaces/.codespaces/.persistedshare,type=bind",
+        "source=/.codespaces/agent/mount,target=/.codespaces/bin,type=bind",
+        "source=/mnt/containerTmp,target=/tmp,type=bind",
+        "type=bind,source=/.codespaces/agent/mount/cache,target=/vscode"
+    ],
+    "containerEnv": {
+        "CODESPACES": "true",
+        "ContainerVersion": "13",
+        "RepositoryName": "MariaDBlive_debug"
+    },
+    "forwardPorts": [
+        3306
     ]
 }
