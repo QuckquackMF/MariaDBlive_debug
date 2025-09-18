@@ -1,13 +1,12 @@
 {
-  "name": "MariaDB DevContainer",
+  "name": "MariaDB Live Debug",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": ".."
   },
-  "remoteUser": "vscode",
   "workspaceFolder": "/workspace",
-  "forwardPorts": [3306, 5678],
-  "postStartCommand": "sudo chown -R vscode:vscode /workspace && sudo service mariadb start && sudo mariadb -e \"CREATE DATABASE IF NOT EXISTS mydatabase; CREATE USER IF NOT EXISTS 'vscode'@'%' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON mydatabase.* TO 'vscode'@'%'; FLUSH PRIVILEGES;\" && python3 run_live_debug.py",
   "extensions": [
     "ms-python.python"
-  ]
+  ],
+  "remoteUser": "vscode"
 }
