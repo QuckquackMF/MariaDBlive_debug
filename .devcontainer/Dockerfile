@@ -24,12 +24,13 @@ RUN mkdir -p /workspace && chown -R vscode:vscode /workspace
 # Set working directory
 WORKDIR /workspace
 
-# Copy Python script and requirements
-COPY create_db.py /workspace/.devcontainer/create_db.py
-COPY requirements.txt /workspace/requirements.txt
+# Copy Python script and requirements from .devcontainer/
+COPY .devcontainer/create_db.py /workspace/.devcontainer/create_db.py
+COPY .devcontainer/run_live_debug.py /workspace/.devcontainer/run_live_debug.py
+COPY .devcontainer/requirements.txt /workspace/requirements.txt
 
-# Install Python dependencies
-RUN pip3 install -r requirements.txt
+# Install Python dependencies including watchdog and debugpy
+RUN pip3 install -r requirements.txt debugpy watchdog
 
 # Switch to vscode user
 USER vscode
