@@ -1,7 +1,7 @@
-# Use Ubuntu 22.04 as base
+# Base image
 FROM ubuntu:22.04
 
-# Install dependencies
+# Install MariaDB, Python3, pip, sudo
 RUN apt-get update && apt-get install -y \
     mariadb-server \
     python3 \
@@ -15,22 +15,22 @@ RUN groupadd --gid 1000 vscode \
     && echo "vscode ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vscode \
     && chmod 0440 /etc/sudoers.d/vscode
 
-# Prepare MariaDB socket
+# Setup MariaDB folder
 RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
-
-# Create workspace and fix permissions
-RUN mkdir -p /workspace && chown -R vscode:vscode /workspace
 
 # Set working directory
 WORKDIR /workspace
 
-# Copy scripts and requirements from repo root
-COPY create_db.py /workspace/create_db.py
-COPY run_live_debug.py /workspace/run_live_debug.py
-COPY requirements.txt /workspace/requirements.txt
+# Copy devcontainer files
+COPY .devcontainer/requirements.txt /workspace/requirements.txt
+COPY .devcontainer/create_db.py /workspace/.devcontainer/create_db.py
+COPY .devcontainer/run_live_debug.py /workspace/.devcontainer/run_live_debug.py
 
-# Install Python dependencies including watchdog and debugpy
-RUN pip3 install -r requirements.txt debugpy watchdog
+# Install Python dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Switch to vscode user
+# Set vscode user as default
 USER vscode
+
+# Command to start MariaDB and watch Python files
+CMD sudo service mariadb start && python3 .devcontainer/run_live_debug.py
